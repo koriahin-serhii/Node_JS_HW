@@ -117,6 +117,28 @@ app.post('/change-email', async (req, res) => {
   });
 });
 
+app.post('/delete-account', async (req, res) => {
+  const { email, password } = req.body;
+
+  const userIndex = users.findIndex((u) => u.email === email);
+  if (userIndex === -1) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  const user = users[userIndex];
+
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    return res.status(401).json({ error: 'Invalid password' });
+  }
+
+  users.splice(userIndex, 1);
+
+  res.json({ 
+    message: 'Account successfully deleted'
+  });
+});
+
 // Middleware для проверки роли администратора
 function checkAdminRole(req, res, next) {
   const { email } = req.body;
