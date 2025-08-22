@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Chat</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      }
+      #chat-container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      #messages {
+        height: 400px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding: 10px;
+        overflow-y: auto;
+      }
+      #message-form {
+        display: flex;
+        gap: 10px;
+      }
+      #message-input {
+        flex-grow: 1;
+        padding: 8px;
+      }
+      button {
+        padding: 8px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .message {
+        margin-bottom: 10px;
+        padding: 8px;
+        background-color: #f1f1f1;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chat-container">
+      <h1>Simple Chat</h1>
+      <div id="messages"></div>
+      <form id="message-form">
+        <input
+          type="text"
+          id="message-input"
+          placeholder="Type your message..."
+          autocomplete="off"
+        />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const messageForm = document.getElementById('message-form');
+      const messageInput = document.getElementById('message-input');
+      const messagesDiv = document.getElementById('messages');
+
+      // Handle form submission
+      messageForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const message = messageInput.value.trim();
+        if (message) {
+          // Send message to server
+          socket.emit('chat message', message);
+          messageInput.value = '';
+        }
+      });
+
+      // Handle incoming messages
+      socket.on('chat message', (msg) => {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.textContent = msg;
+        messagesDiv.appendChild(messageElement);
+        // Auto-scroll to bottom
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      });
+
+      // Connection status
+      socket.on('connect', () => {
+        console.log('Connected to server');
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Disconnected from server');
+      });
+    </script>
+  </body>
+</html>
