@@ -25,10 +25,16 @@ router.get('/all', async (req, res) => {
   }
 });
 
-router.get('/:category', async (req, res) => {
+router.get('/:categoryName', async (req, res) => {
   try {
-    const { category } = req.params;
-    const products = await Product.find({ category }).populate('category');
+    const { categoryName } = req.params;
+    const category = await Category.findOne({ name: categoryName });
+    if (!category) {
+      return res.status(404).send({ message: 'Category not found' });
+    }
+    const products = await Product.find({ category: category._id }).populate(
+      'category'
+    );
     res.status(200).send(products);
   } catch (error) {
     res
