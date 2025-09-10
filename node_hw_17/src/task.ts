@@ -59,7 +59,7 @@ function updateStock(
   productInfo: ProductInfo
 ): { [key: string]: number } {
   const [name, , stock] = productInfo;
-  inventory[name] = stock;
+  inventory[name] = (inventory[name] || 0) + stock;
   return inventory;
 }
 const inventory = {
@@ -69,3 +69,4 @@ const inventory = {
 const productInfo: ProductInfo = ['banana', 1.2, 100];
 console.log(updateStock(inventory, productInfo));
 console.log(updateStock(inventory, ['orange', 0.8, 200]));
+console.log(updateStock(inventory, ['orange', 0.8, 500]));

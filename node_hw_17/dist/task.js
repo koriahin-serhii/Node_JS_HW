@@ -35,7 +35,7 @@ console.log(filterOrdersByStatus(orders, 'pending'));
 console.log(filterOrdersByStatus(orders, 'shipped'));
 function updateStock(inventory, productInfo) {
     const [name, , stock] = productInfo;
-    inventory[name] = stock;
+    inventory[name] = (inventory[name] || 0) + stock;
     return inventory;
 }
 const inventory = {
@@ -45,4 +45,5 @@ const inventory = {
 const productInfo = ['banana', 1.2, 100];
 console.log(updateStock(inventory, productInfo));
 console.log(updateStock(inventory, ['orange', 0.8, 200]));
+console.log(updateStock(inventory, ['orange', 0.8, 500]));
 //# sourceMappingURL=task.js.map
