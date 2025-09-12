@@ -51,14 +51,15 @@ console.log(
 class Library {
   static totalBooks: number = 0;
 
-  static addBook(): void {
+  addBook(): void {
     Library.totalBooks += 1;
   }
 }
 
-Library.addBook();
-Library.addBook();
-Library.addBook();
+const myLibrary = new Library();
+myLibrary.addBook();
+myLibrary.addBook();
+myLibrary.addBook();
 
 console.log(`Total books in library: ${Library.totalBooks}`);
 
